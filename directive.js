@@ -44,7 +44,7 @@ function register (angular) {
             drake.models.push(newValue);
           }
         } else {
-          drake.models = [newValue];
+          drake.models = Array.apply(null, new Array(drake.containers.length)).map(function () { return newValue; });
         }
 
         dragulaService.handleModels(dragulaScope, drake);
