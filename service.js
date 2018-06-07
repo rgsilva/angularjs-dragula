@@ -33,13 +33,13 @@ function register (angular) {
       });
       drake.on('drag',function dragModel (el, source) {
         dragElm = el;
-        dragIndex = domIndexOf(el, source);
+        dragIndex = domIndexOf(el, source, drake.options.moves);
       });
       drake.on('drop',function dropModel (dropElm, target, source) {
         if (!drake.models) {
           return;
         }
-        dropIndex = domIndexOf(dropElm, target);
+        dropIndex = domIndexOf(dropElm, target, drake.options.moves);
         scope.$applyAsync(function applyDrop() {
           sourceModel = drake.models[drake.containers.indexOf(source)];
           if (target === source) {
@@ -69,8 +69,8 @@ function register (angular) {
       }
       return ctx;
     }
-    function domIndexOf(child, parent) {
-      return Array.prototype.indexOf.call(angular.element(parent).children(), child);
+    function domIndexOf(child, parent, moves) {
+      return Array.prototype.indexOf.call(angular.element(parent).children().filter(function (el) { return moves(el); }), child);
     }
     function add (scope, name, drake) {
       var bag = find(scope, name);
@@ -106,6 +106,7 @@ function register (angular) {
     }
     function setOptions (scope, name, options) {
       var bag = add(scope, name, dragula(options));
+      bag.drake.options = options;
       handleModels(scope, bag.drake);
     }
   }];
