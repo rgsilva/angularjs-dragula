@@ -70,7 +70,7 @@ function register (angular) {
       return ctx;
     }
     function domIndexOf(child, parent, moves) {
-      return Array.prototype.indexOf.call(angular.element(parent).children().filter(function (el) { return moves(el); }), child);
+      return Array.prototype.indexOf.call(angular.element(parent).children().toArray().filter(function (el) { return moves(el); }), child);
     }
     function add (scope, name, drake) {
       var bag = find(scope, name);
