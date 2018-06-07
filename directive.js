@@ -1,6 +1,7 @@
 'use strict';
 
 var dragula = require('dragula');
+var elementKey = 'dragula-key';
 
 /*jshint unused: false*/
 function register (angular) {
@@ -36,16 +37,14 @@ function register (angular) {
           return;
         }
 
-        if (drake.models) {
-          var modelIndex = oldValue ? drake.models.indexOf(oldValue) : -1;
-          if (modelIndex >= 0) {
-            drake.models.splice(modelIndex, 1, newValue);
-          } else {
-            drake.models.push(newValue);
-          }
-        } else {
-          drake.models = Array.apply(null, new Array(drake.containers.length)).map(function () { return newValue; });
+        if (!drake.models) {
+          drake.models = {};
         }
+
+        if (!elem.attr(elementKey)) {
+          elem.attr(elementKey, new Date().getTime() + '_' + Math.round((100 + Math.random())));
+        }
+        drake.models[elem.attr(elementKey)] = newValue;
 
         dragulaService.handleModels(dragulaScope, drake);
       });

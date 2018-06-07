@@ -2,6 +2,7 @@
 
 var dragula = require('dragula');
 var dragulaKey = '$$dragula';
+var elementKey = 'dragula-key';
 var replicateEvents = require('./replicate-events');
 
 function register (angular) {
@@ -22,10 +23,10 @@ function register (angular) {
       var dropIndex;
       var sourceModel;
       drake.on('remove',function removeModel (el, source) {
-        if (!drake.models) {
+        if (!drake.models || !source.attr(elementKey)) {
           return;
         }
-        sourceModel = drake.models[drake.containers.indexOf(source)];
+        sourceModel = drake.models[angular.element(source).attr(elementKey)];
         scope.$applyAsync(function applyRemove() {
           sourceModel.splice(dragIndex, 1);
           drake.emit('remove-model', el, source);
@@ -41,12 +42,12 @@ function register (angular) {
         }
         dropIndex = domIndexOf(dropElm, target, drake.options.moves);
         scope.$applyAsync(function applyDrop() {
-          sourceModel = drake.models[drake.containers.indexOf(source)];
+          sourceModel = drake.models[angular.element(source).attr(elementKey)];
           if (target === source) {
             sourceModel.splice(dropIndex, 0, sourceModel.splice(dragIndex, 1)[0]);
           } else {
             var notCopy = dragElm === dropElm;
-            var targetModel = drake.models[drake.containers.indexOf(target)];
+            var targetModel = drake.models[angular.element(target).attr(elementKey)];
             var dropElmModel = notCopy ? sourceModel[dragIndex] : angular.copy(sourceModel[dragIndex]);
 
             if (notCopy) {
