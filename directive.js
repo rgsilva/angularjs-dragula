@@ -2,6 +2,7 @@
 
 var dragula = require('dragula');
 var elementKey = 'dragula-key';
+var elementKeyCounter = 1;
 
 /*jshint unused: false*/
 function register (angular) {
@@ -42,7 +43,7 @@ function register (angular) {
         }
 
         if (!elem.attr(elementKey)) {
-          elem.attr(elementKey, new Date().getTime() + '_' + Math.round((100 + Math.random())));
+          elem.attr(elementKey, elementKeyCounter++);
         }
         drake.models[elem.attr(elementKey)] = newValue;
 
